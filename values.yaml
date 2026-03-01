@@ -1,0 +1,143 @@
+# Reloader: watches ConfigMaps/Secrets and triggers rolling updates of workloads.
+# Annotate with reloader.stakater.com/auto: "true" or configmap.reloader.stakater.com/reload.
+# See https://docs.stakater.com/reloader
+
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+
+kubernetes:
+  host: https://kubernetes.default
+
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  name: stakater/reloader
+  repository: ghcr.io/stakater/reloader
+  tag: v1.4.12
+  pullPolicy: IfNotPresent
+
+reloader:
+  autoReloadAll: true
+  isArgoRollouts: false
+  isOpenshift: false
+  ignoreSecrets: false
+  ignoreConfigMaps: false
+  ignoreJobs: false
+  ignoreCronJobs: false
+  reloadOnCreate: true
+  reloadOnDelete: false
+  syncAfterRestart: true
+  reloadStrategy: default
+  ignoreNamespaces: "kube-system,argo-cd"
+  namespaceSelector: ""
+  resourceLabelSelector: ""
+  logFormat: ""
+  logLevel: info
+  watchGlobally: true
+  enableHA: true
+  readOnlyRootFileSystem: true
+  legacy:
+    rbac: false
+  matchLabels: {}
+  enableMetricsByNamespace: false
+  deployment:
+    dnsConfig: {}
+    replicas: 2
+    revisionHistoryLimit: 2
+    nodeSelector: {}
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: DoesNotExist
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                      - reloader
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                      - reloader
+              topologyKey: kubernetes.io/hostname
+    volumeMounts: []
+    volumes: []
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 65534
+      seccompProfile:
+        type: RuntimeDefault
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65534
+      seccompProfile:
+        type: RuntimeDefault
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+    topologySpreadConstraints: []
+    annotations: {}
+    labels:
+      provider: stakater
+      group: com.stakater.platform
+      version: v1.4.12
+    env:
+      open: {}
+      secret: {}
+      field: {}
+      existing: {}
+    livenessProbe: {}
+    readinessProbe: {}
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
+    pod:
+      annotations: {}
+    priorityClassName: ""
+    gomaxprocsOverride: ""
+    gomemlimitOverride: ""
+  service: {}
+  rbac:
+    enabled: true
+    labels: {}
+  serviceAccount:
+    create: true
+    labels: {}
+    annotations: {}
+    name: null
+  custom_annotations: {}
+  serviceMonitor:
+    enabled: false
+  podMonitor:
+    enabled: false
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+  netpol:
+    enabled: false
+    from: []
+    to: []
+  webhookUrl: ""
