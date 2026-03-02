@@ -2,6 +2,15 @@
 
 Wrapper around [Stakater Reloader](https://github.com/stakater/Reloader). Watches ConfigMaps and Secrets and triggers rolling updates of Deployments, DaemonSets, StatefulSets. Annotate workloads with `reloader.stakater.com/auto: "true"` or `configmap.reloader.stakater.com/reload: <name>`.
 
+## Subcharts
+
+| Subchart | Source | Values prefix | Description |
+|----------|--------|---------------|-------------|
+| **reloader** | [Stakater stakater-charts](https://github.com/stakater/charts) | `reloader.*` | Reloader controller: watch options, deployment, securityContext. |
+| **onepassworditem** | [expectedbehaviors/OnePasswordItem-helm](https://github.com/expectedbehaviors/OnePasswordItem-helm) | `onepassworditem.*` | Optional secrets sync into the release namespace. |
+
+All inputs: **`reloader.*`** (see Stakater chart values), **`onepassworditem.enabled`**, **`onepassworditem.items`**. Defaults: see `values.yaml`.
+
 ## What it does
 
 - Deploys the [Reloader](https://docs.stakater.com/reloader) controller from the official Stakater chart.
