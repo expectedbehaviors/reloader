@@ -37,4 +37,5 @@ jobs:
           helm_repo_url: https://stakater.github.io/stakater-charts
           helm_repo_name_2: onepassworditem
           helm_repo_url_2: https://expectedbehaviors.github.io/OnePasswordItem-helm
+          tag_version_prefix: "reloader-v"
           release_tag: ${{ github.event.inputs.release_tag }}
