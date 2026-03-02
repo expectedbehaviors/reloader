@@ -11,6 +11,50 @@ Wrapper around [Stakater Reloader](https://github.com/stakater/Reloader). Watche
 
 All inputs: **`reloader.*`** (see Stakater chart values), **`onepassworditem.enabled`**, **`onepassworditem.items`**. Defaults: see `values.yaml`.
 
+## Configuration reference (all inputs)
+
+Every value is documented below. Source: upstream [Stakater Reloader chart](https://github.com/stakater/charts) (as `reloader.*`) and [expectedbehaviors/OnePasswordItem-helm](https://github.com/expectedbehaviors/OnePasswordItem-helm) (as `onepassworditem.*`).
+
+### Subchart: reloader (Stakater)
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `reloader.autoReloadAll` | bool | `false` | Reload on any ConfigMap/Secret change for annotated workloads. |
+| `reloader.isArgoRollouts` | bool | `false` | Enable if using Argo Rollouts CRD. |
+| `reloader.ignoreSecrets` | bool | `false` | Skip watching Secrets. |
+| `reloader.ignoreConfigMaps` | bool | `false` | Skip watching ConfigMaps. |
+| `reloader.ignoreJobs` | bool | `false` | Exclude Jobs from reload monitoring. |
+| `reloader.ignoreCronJobs` | bool | `false` | Exclude CronJobs from reload monitoring. |
+| `reloader.reloadOnCreate` | bool | `false` | Reload when referenced ConfigMap/Secret is created. |
+| `reloader.reloadOnDelete` | bool | `false` | Reload when referenced resource is deleted. |
+| `reloader.reloadStrategy` | string | `"default"` | One of default, env-vars, annotations. |
+| `reloader.ignoreNamespaces` | string | `""` | Comma-separated namespaces to ignore. |
+| `reloader.logLevel` | string | `"info"` | Log level (trace, debug, info, warning, error, fatal, panic). |
+| `reloader.watchGlobally` | bool | `true` | Watch all namespaces. |
+| `reloader.enableHA` | bool | `false` | Enable leader election for multiple replicas. |
+| `reloader.readOnlyRootFileSystem` | bool | `false` | Set true if PodSecurityPolicy enforces readOnlyRootFilesystem. |
+| `reloader.deployment.replicas` | int | `1` | Number of replicas. |
+| `reloader.deployment.securityContext` | object | — | Pod security context (runAsNonRoot, runAsUser, seccompProfile). |
+| `reloader.deployment.containerSecurityContext` | object | — | Container security context. |
+| `reloader.deployment.nodeSelector` | object | `{}` | Node selector. |
+| `reloader.deployment.affinity` | object | `{}` | Affinity rules. |
+| `reloader.deployment.tolerations` | list | `[]` | Tolerations. |
+| `image.repository` | string | `"ghcr.io/stakater/reloader"` | Reloader image. |
+| `image.tag` | string | chart default | Image tag. |
+| `image.pullPolicy` | string | `"IfNotPresent"` | Pull policy. |
+| `global.imageRegistry` | string | `""` | Global image registry. |
+| `global.imagePullSecrets` | list | `[]` | Global image pull secrets. |
+| `nameOverride` | string | `""` | Override name. |
+| `fullnameOverride` | string | `""` | Override full name. |
+
+### Subchart: onepassworditem
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `onepassworditem.enabled` | bool | `true` | Create OnePasswordItem resources; set `false` if not using 1Password. |
+| `onepassworditem.defaultVault` | string | `""` | Default vault for items. |
+| `onepassworditem.items` | list | `[]` | List of `{ item, name, type }`; optional `vault`, `namespace`, `annotations`, `labels`. |
+
 ## What it does
 
 - Deploys the [Reloader](https://docs.stakater.com/reloader) controller from the official Stakater chart.
